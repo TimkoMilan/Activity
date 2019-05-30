@@ -84,24 +84,24 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
         }
     }
 
-    public GameStatus<OneDimensionalCoordinate> wrongAnswer(int boardId) {
-        setAnswerToWrongAnswerMap(boardId);
-        nextPlayer(boardId);
+    public GameStatus<OneDimensionalCoordinate> wrongAnswer(int gameId) {
+        setAnswerToWrongAnswerMap(gameId);
+        nextPlayer(gameId);
         return gameStatus;
     }
 
-    public Statistic getStatistic(int boardId) {
+    public Statistic getStatistic(int gameId) {
         Statistic statistic = new Statistic();
-        statistic.setBoardId(boardId);
-        statistic.setCorrectAnswers(correctAnswer.get(boardId));
-        statistic.setWrongAnswers(wrongAnswer.get(boardId));
+        statistic.setBoardId(gameId);
+        statistic.setCorrectAnswers(correctAnswer.get(gameId));
+        statistic.setWrongAnswers(wrongAnswer.get(gameId));
         return statistic;
     }
 
-    private void nextPlayer(int boardId) {
+    private void nextPlayer(int gameID) {
         piece.nextPiece(board);
         currentGameStatus();
-        cardByBoardId.remove(boardId);
+        cardByBoardId.remove(gameID);
     }
 
     private void setPlayersToPositionMap(List<Player> playerList) {
@@ -114,39 +114,39 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
         return playerPositionByPlayerId.get(board.getCurrentPlayer());
     }
 
-    private void setAnswerToCorrectAnswerMap(int boardId) {
-        if (correctAnswer.get(boardId) == null) {
+    private void setAnswerToCorrectAnswerMap(int gameId) {
+        if (correctAnswer.get(gameId) == null) {
             answer = new Answer();
             answer.setCard(card);
             answer.setPlayerId(gameStatus.getCurrentPlayer());
             Set<Answer> answers = new HashSet<>();
             answers.add(answer);
-            correctAnswer.put(boardId, answers);
+            correctAnswer.put(gameId, answers);
         } else {
             answer = new Answer();
             answer.setCard(card);
             answer.setPlayerId(gameStatus.getCurrentPlayer());
-            Set<Answer> updatedAnswer = correctAnswer.get(boardId);
+            Set<Answer> updatedAnswer = correctAnswer.get(gameId);
             updatedAnswer.add(answer);
-            correctAnswer.put(boardId, updatedAnswer);
+            correctAnswer.put(gameId, updatedAnswer);
         }
     }
 
-    private void setAnswerToWrongAnswerMap(int boardId) {
-        if (wrongAnswer.get(boardId) == null) {
+    private void setAnswerToWrongAnswerMap(int gameId) {
+        if (wrongAnswer.get(gameId) == null) {
             answer = new Answer();
             answer.setCard(card);
             answer.setPlayerId(gameStatus.getCurrentPlayer());
             Set<Answer> answers = new HashSet<>();
             answers.add(answer);
-            wrongAnswer.put(boardId, answers);
+            wrongAnswer.put(gameId, answers);
         } else {
             answer = new Answer();
             answer.setCard(card);
             answer.setPlayerId(gameStatus.getCurrentPlayer());
-            Set<Answer> updatedAnswer = wrongAnswer.get(boardId);
+            Set<Answer> updatedAnswer = wrongAnswer.get(gameId);
             updatedAnswer.add(answer);
-            wrongAnswer.put(boardId, updatedAnswer);
+            wrongAnswer.put(gameId, updatedAnswer);
         }
     }
 

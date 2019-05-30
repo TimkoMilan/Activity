@@ -43,7 +43,6 @@ public class ActivityGameTest {
         assertEquals(gameStatus.getBoard().getFields().size(), 31);
         assertEquals(gameStatus.getBoard().getFields().get(0).getPieces().size(), playerCreateDtoList.size());
         assertEquals(gameStatus.getCurrentPlayer(), 1);
-
     }
 
     @Test
@@ -51,13 +50,18 @@ public class ActivityGameTest {
         Card card = activityGame.cardByPoint(3, 1);
         OneDimensionalCoordinate coordinate = new OneDimensionalCoordinate(3);
         assertEquals(card.getCoordinate().getX(), coordinate.getX());
-
     }
 
     @Test
     public void applyMovement() {
-        GameStatus<OneDimensionalCoordinate> status = activityGame.applyMovement(1);
-        Assert.assertEquals(status.getBoard().getFields().get(3).getPieces().size(), 1);
+        GameStatus<OneDimensionalCoordinate> gameStatus = activityGame.applyMovement(1);
+        Assert.assertEquals(gameStatus.getBoard().getFields().get(3).getPieces().size(), 1);
+    }
+
+    @Test
+    public void nextPlayer() {
+        GameStatus gameStatus = activityGame.wrongAnswer(1);
+        Assert.assertEquals(gameStatus.getCurrentPlayer(), 2);
     }
 
 
