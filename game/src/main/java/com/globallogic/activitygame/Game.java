@@ -46,4 +46,5 @@ public abstract class Game<T extends Coordinate> {
     }
 
     protected abstract GameStatus<T> applyMovement(int gameId);
+
 }

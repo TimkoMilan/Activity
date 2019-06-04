@@ -45,6 +45,11 @@ public class ActivityGameResource {
         return gameService.getStatistic(gameId);
     }
 
+    @GetMapping("/timer/{gameId}")
+    public void timer(@PathVariable int gameId){
+        gameService.timer(gameId);
+    }
+
     @ExceptionHandler(ActivityGameException.class)
     public ResponseEntity handleActivityGameException(ActivityGameException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

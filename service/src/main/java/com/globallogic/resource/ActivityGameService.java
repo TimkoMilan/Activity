@@ -20,5 +20,7 @@ public interface ActivityGameService {
 
     Card getCard(int points, int gameId);
 
+    void timer(int gameId);
+
 
 }

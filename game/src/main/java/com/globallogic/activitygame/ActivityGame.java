@@ -59,13 +59,17 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
                 int randomNumber = random.nextInt(cards.size());
                 card = cards.get(randomNumber);
                 cardByGameId.put(gameId, card);
-                Date currentTime = new Date();
-                Date expirationTime = new Date(currentTime.getTime() + TimeUnit.MINUTES.toMillis(1));
-                gameStatus.setExpirationCardTime(expirationTime);
+
             }
         }
         logger.info(cardByGameId.toString());
         return cardByGameId.get(gameId);
+    }
+
+    public void timer() {
+        Date currentTime = new Date();
+        Date expirationTime = new Date(currentTime.getTime() + TimeUnit.MINUTES.toMillis(1));
+        gameStatus.setExpirationCardTime(expirationTime);
     }
 
     public GameStatus<OneDimensionalCoordinate> applyMovement(int gameId) {
@@ -75,11 +79,13 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
                 gameStatus.setEndGame(true);
                 currentGameStatus();
                 endGame(gameId);
+                gameStatus.setExpirationCardTime(null);
                 return gameStatus;
             } else {
                 setAnswerToCorrectAnswerMap(gameId);
                 nextPlayer(gameId);
                 cardByGameId.remove(gameId);
+                gameStatus.setExpirationCardTime(null);
                 return gameStatus;
             }
         } else {
@@ -92,6 +98,7 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
             setAnswerToWrongAnswerMap(gameId);
             nextPlayer(gameId);
             cardByGameId.remove(gameId);
+            gameStatus.setExpirationCardTime(null);
             return gameStatus;
         } else {
             throw new ActivityGameException("Card not found ");

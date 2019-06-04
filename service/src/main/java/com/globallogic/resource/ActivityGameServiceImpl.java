@@ -29,15 +29,25 @@ class ActivityGameServiceImpl implements ActivityGameService {
         return activityGame.init(boardSize, players, gameId);
     }
 
-    public Card getCard(int point, int gameId) {
+
+    @Override
+    public Card getCard(int points, int gameId) {
         if (getGameById(gameId) != null) {
-            if (point <= 3) {
+            if (points <= 3) {
                 ActivityGame activityGame = getGameById(gameId);
-                return activityGame.cardByPoint(point, gameId);
+                return activityGame.cardByPoint(points, gameId);
             } else {
                 throw new ActivityGameException("Invalid card value");
             }
         } else {
+            throw new ActivityGameException("Invalid gameId");
+        }    }
+
+    @Override
+    public void timer(int gameId) {
+        if (getGameById(gameId)!= null){
+            getGameById(gameId).timer();
+        }else {
             throw new ActivityGameException("Invalid gameId");
         }
     }
@@ -50,8 +60,10 @@ class ActivityGameServiceImpl implements ActivityGameService {
                 if (gameStatus.isEndGame()) {
                     removeGame(gameId);
                 }
+
                 return gameStatus;
             } else {
+                wrongAnswer(gameId);
                 throw new ActivityGameException("Time has been expired");
             }
         } else {
@@ -99,7 +111,12 @@ class ActivityGameServiceImpl implements ActivityGameService {
 
     private boolean checkTimeExpiration(GameStatus gameStatus) {
         Date currentTime = new Date();
-        return currentTime.compareTo(gameStatus.getExpirationCardTime()) < 0;
+        if (gameStatus.getExpirationCardTime()!=null){
+            return currentTime.compareTo(gameStatus.getExpirationCardTime()) < 0;
+        }
+        else {
+            throw new ActivityGameException("First start timer");
+        }
     }
 
 }
