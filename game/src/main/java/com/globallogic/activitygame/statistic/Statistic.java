@@ -5,17 +5,17 @@ import java.util.Set;
 
 public class Statistic implements Serializable {
 
-    private int boardId;
+    private int gameId;
     private Set<Answer> correctAnswers;
     private Set<Answer> wrongAnswers;
 
 
-    public int getBoardId() {
-        return boardId;
+    public int getGameId() {
+        return gameId;
     }
 
-    public void setBoardId(int boardId) {
-        this.boardId = boardId;
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
     }
 
     public Set<Answer> getCorrectAnswers() {
@@ -37,7 +37,7 @@ public class Statistic implements Serializable {
     @Override
     public String toString() {
         return "Statistic{" +
-                "boardId=" + boardId +
+                "gameId=" + gameId +
                 ", correctAnswers=" + correctAnswers +
                 ", wrongAnswers=" + wrongAnswers +
                 '}';

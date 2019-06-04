@@ -59,7 +59,6 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
                 int randomNumber = random.nextInt(cards.size());
                 card = cards.get(randomNumber);
                 cardByGameId.put(gameId, card);
-
             }
         }
         logger.info(cardByGameId.toString());
@@ -67,9 +66,11 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
     }
 
     public void timer() {
-        Date currentTime = new Date();
-        Date expirationTime = new Date(currentTime.getTime() + TimeUnit.MINUTES.toMillis(1));
-        gameStatus.setExpirationCardTime(expirationTime);
+        if (gameStatus.getExpirationCardTime()==null){
+            Date currentTime = new Date();
+            Date expirationTime = new Date(currentTime.getTime() + TimeUnit.MINUTES.toMillis(1));
+            gameStatus.setExpirationCardTime(expirationTime);
+        }
     }
 
     public GameStatus<OneDimensionalCoordinate> applyMovement(int gameId) {
@@ -88,9 +89,7 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
                 gameStatus.setExpirationCardTime(null);
                 return gameStatus;
             }
-        } else {
-            throw new ActivityGameException("Card not found or expired time");
-        }
+        } else throw new ActivityGameException("Card not found or expired time");
     }
 
     public GameStatus<OneDimensionalCoordinate> wrongAnswer(int gameId) {
@@ -100,9 +99,7 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
             cardByGameId.remove(gameId);
             gameStatus.setExpirationCardTime(null);
             return gameStatus;
-        } else {
-            throw new ActivityGameException("Card not found ");
-        }
+        } else throw new ActivityGameException("Card not found ");
     }
 
     public GameStatus<OneDimensionalCoordinate> getGameStatus() {
@@ -111,7 +108,7 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
 
     public Statistic getStatistic(int gameId) {
         Statistic statistic = new Statistic();
-        statistic.setBoardId(gameId);
+        statistic.setGameId(gameId);
         statistic.setCorrectAnswers(correctAnswer.get(gameId));
         statistic.setWrongAnswers(wrongAnswer.get(gameId));
         return statistic;

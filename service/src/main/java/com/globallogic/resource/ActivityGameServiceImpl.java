@@ -21,7 +21,7 @@ class ActivityGameServiceImpl implements ActivityGameService {
     private Random randomGenerator = new Random();
     private Map<Integer, ActivityGame> gameByGameId = new ConcurrentHashMap<>();
 
-
+    @Override
     public GameStatus<OneDimensionalCoordinate> initGame(int boardSize, List<PlayerCreateDto> players) {
         ActivityGame activityGame = new ActivityGame();
         int gameId = generateGameId();
@@ -29,29 +29,24 @@ class ActivityGameServiceImpl implements ActivityGameService {
         return activityGame.init(boardSize, players, gameId);
     }
 
-
     @Override
     public Card getCard(int points, int gameId) {
         if (getGameById(gameId) != null) {
             if (points <= 3) {
                 ActivityGame activityGame = getGameById(gameId);
                 return activityGame.cardByPoint(points, gameId);
-            } else {
-                throw new ActivityGameException("Invalid card value");
-            }
-        } else {
-            throw new ActivityGameException("Invalid gameId");
-        }    }
+            } else throw new ActivityGameException("Invalid card value");
+        } else throw new ActivityGameException("Invalid gameId");
+    }
 
     @Override
     public void timer(int gameId) {
-        if (getGameById(gameId)!= null){
+        if (getGameById(gameId) != null) {
             getGameById(gameId).timer();
-        }else {
-            throw new ActivityGameException("Invalid gameId");
-        }
+        } else throw new ActivityGameException("Invalid gameId");
     }
 
+    @Override
     public GameStatus<OneDimensionalCoordinate> correctAnswer(int gameId) {
         if (getGameById(gameId) != null) {
             if (checkTimeExpiration(getGameById(gameId).getGameStatus())) {
@@ -60,26 +55,23 @@ class ActivityGameServiceImpl implements ActivityGameService {
                 if (gameStatus.isEndGame()) {
                     removeGame(gameId);
                 }
-
                 return gameStatus;
             } else {
                 wrongAnswer(gameId);
                 throw new ActivityGameException("Time has been expired");
             }
-        } else {
-            throw new ActivityGameException("Invalid gameId");
-        }
+        } else throw new ActivityGameException("Invalid gameId");
     }
 
+    @Override
     public GameStatus<OneDimensionalCoordinate> wrongAnswer(int gameId) {
         if (getGameById(gameId) != null) {
             ActivityGame activityGame = getGameById(gameId);
             return activityGame.wrongAnswer(gameId);
-        } else {
-            throw new ActivityGameException("Invalid gameId");
-        }
+        } else throw new ActivityGameException("Invalid gameId");
     }
 
+    @Override
     public Statistic getStatistic(int gameId) {
         if (getGameById(gameId) != null) {
             ActivityGame activityGame = getGameById(gameId);
@@ -111,12 +103,9 @@ class ActivityGameServiceImpl implements ActivityGameService {
 
     private boolean checkTimeExpiration(GameStatus gameStatus) {
         Date currentTime = new Date();
-        if (gameStatus.getExpirationCardTime()!=null){
+        if (gameStatus.getExpirationCardTime() != null) {
             return currentTime.compareTo(gameStatus.getExpirationCardTime()) < 0;
-        }
-        else {
-            throw new ActivityGameException("First start timer");
-        }
+        } else throw new ActivityGameException("First start timer");
     }
 
 }

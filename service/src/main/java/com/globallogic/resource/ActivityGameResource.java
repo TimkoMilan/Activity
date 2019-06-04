@@ -21,11 +21,11 @@ public class ActivityGameResource {
     private ActivityGameService gameService;
 
     @PostMapping("/{boardSize}")
-    public GameStatus<OneDimensionalCoordinate> initGame(@PathVariable int boardSize, @RequestBody List<PlayerCreateDto> playerCreateDto) throws ActivityGameException {
+    public GameStatus<OneDimensionalCoordinate> initGame(@PathVariable int boardSize, @RequestBody List<PlayerCreateDto> playerCreateDto) {
         return gameService.initGame(boardSize, playerCreateDto);
     }
 
-    @GetMapping("/card/point/{point}/boardId/{gameId}")
+    @GetMapping("/card/point/{point}/gameId/{gameId}")
     public Card getCard(@PathVariable int point, @PathVariable int gameId) {
         return gameService.getCard(point, gameId);
     }
@@ -46,7 +46,7 @@ public class ActivityGameResource {
     }
 
     @GetMapping("/timer/{gameId}")
-    public void timer(@PathVariable int gameId){
+    public void timer(@PathVariable int gameId) {
         gameService.timer(gameId);
     }
 
