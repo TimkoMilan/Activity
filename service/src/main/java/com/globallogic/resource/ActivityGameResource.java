@@ -18,31 +18,31 @@ import java.util.List;
 public class ActivityGameResource {
 
     @Autowired
-    private ActivityGameServiceImpl gameService;
+    private ActivityGameService gameService;
 
     @PostMapping("/{boardSize}")
     public GameStatus<OneDimensionalCoordinate> initGame(@PathVariable int boardSize, @RequestBody List<PlayerCreateDto> playerCreateDto) throws ActivityGameException {
         return gameService.initGame(boardSize, playerCreateDto);
     }
 
-    @GetMapping("/card/point/{point}/boardId/{boardId}")
-    public Card getCard(@PathVariable int point ,@PathVariable int boardId) {
-        return gameService.getCard(point, boardId);
+    @GetMapping("/card/point/{point}/boardId/{gameId}")
+    public Card getCard(@PathVariable int point, @PathVariable int gameId) {
+        return gameService.getCard(point, gameId);
     }
 
-    @GetMapping("/correctAnswer/{boardId}")
-    public GameStatus<OneDimensionalCoordinate> correctAnswer(@PathVariable int boardId) {
-        return gameService.correctAnswer(boardId);
+    @GetMapping("/correctAnswer/{gameId}")
+    public GameStatus<OneDimensionalCoordinate> correctAnswer(@PathVariable int gameId) {
+        return gameService.correctAnswer(gameId);
     }
 
-    @GetMapping("/wrongAnswer/{boardId}")
-    public GameStatus<OneDimensionalCoordinate> wrongAnswer(@PathVariable int boardId) {
-        return gameService.wrongAnswer(boardId);
+    @GetMapping("/wrongAnswer/{gameId}")
+    public GameStatus<OneDimensionalCoordinate> wrongAnswer(@PathVariable int gameId) {
+        return gameService.wrongAnswer(gameId);
     }
 
-    @GetMapping("/stats/{boardId}")
-    public Statistic getAnswerStatistic(@PathVariable int boardId) {
-        return gameService.getStatistic(boardId);
+    @GetMapping("/stats/{gameId}")
+    public Statistic getAnswerStatistic(@PathVariable int gameId) {
+        return gameService.getStatistic(gameId);
     }
 
     @ExceptionHandler(ActivityGameException.class)

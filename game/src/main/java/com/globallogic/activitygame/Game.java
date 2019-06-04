@@ -7,6 +7,7 @@ import com.globallogic.activitygame.field.Field;
 import com.globallogic.activitygame.game.status.GameStatus;
 import com.globallogic.activitygame.player.Player;
 import com.globallogic.activitygame.player.PlayerCreateDto;
+import com.globallogic.activitygame.statistic.Answer;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public abstract class Game<T extends Coordinate> {
     Board<T> board;
     List<Field<T>> fields;
     GameStatus<T> gameStatus;
-    Map<Integer, Card> cardByBoardId = new HashMap<>();
+    Map<Integer, Card> cardByGameId = new HashMap<>();
 
 
     void init(List<PlayerCreateDto> playerCreateDtoList, List<Player> players, List<Field<T>> fields) {
@@ -33,8 +34,8 @@ public abstract class Game<T extends Coordinate> {
     }
 
 
-    protected void endGame(int boardId) {
-        cardByBoardId.remove(boardId);
+    protected void endGame(int gameID) {
+        cardByGameId.remove(gameID);
     }
 
     protected GameStatus<T> currentGameStatus() {
@@ -44,5 +45,5 @@ public abstract class Game<T extends Coordinate> {
         return gameStatus;
     }
 
-    protected abstract GameStatus<T> applyMovement(int boardId);
+    protected abstract GameStatus<T> applyMovement(int gameId);
 }

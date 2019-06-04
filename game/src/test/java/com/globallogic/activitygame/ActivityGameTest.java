@@ -42,7 +42,7 @@ public class ActivityGameTest {
         assertEquals(gameStatus.getBoard().getPlayers().size(), playerCreateDtoList.size());
         assertEquals(gameStatus.getBoard().getFields().size(), 31);
         assertEquals(gameStatus.getBoard().getFields().get(0).getPieces().size(), playerCreateDtoList.size());
-        assertEquals(gameStatus.getCurrentPlayer(), 1);
+        assertEquals(1,gameStatus.getCurrentPlayer());
     }
 
     @Test

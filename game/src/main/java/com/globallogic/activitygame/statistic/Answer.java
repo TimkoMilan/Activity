@@ -3,12 +3,14 @@ package com.globallogic.activitygame.statistic;
 import com.globallogic.activitygame.dictionary.Card;
 
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.Date;
 
 public class Answer implements Serializable {
 
     private Card card;
     private int playerId;
+
+
 
     public Card getCard() {
         return card;
@@ -33,4 +35,5 @@ public class Answer implements Serializable {
                 ", playerId=" + playerId +
                 '}';
     }
+
 }

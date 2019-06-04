@@ -82,8 +82,8 @@ public class TwoDimensionalActivityGame extends Game<TwoDimensionalCoordinate> {
 
 
     @Override
-    protected void endGame(int boardId) {
-        super.endGame(boardId);
+    protected void endGame(int gameID) {
+        super.endGame(gameID);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class TwoDimensionalActivityGame extends Game<TwoDimensionalCoordinate> {
     }
 
     @Override
-    protected GameStatus<TwoDimensionalCoordinate> applyMovement(int boardId) {
+    protected GameStatus<TwoDimensionalCoordinate> applyMovement(int gameId) {
         return null;
     }
 

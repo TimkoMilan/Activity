@@ -19,6 +19,7 @@ import com.globallogic.activitygame.statistic.Statistic;
 import org.apache.log4j.Logger;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class ActivityGame extends Game<OneDimensionalCoordinate> {
 
@@ -52,41 +53,52 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
 
     public Card cardByPoint(int points, int gameId) {
         if (points == 1 || points == 2 || points == 3) {
-            if (cardByBoardId.get(gameId) == null && cardMap != null) {
+            if (cardByGameId.get(gameId) == null && cardMap != null) {
                 Set<Card> cardSet = cardMap.get(points);
                 List<Card> cards = new ArrayList<>(cardSet);
                 int randomNumber = random.nextInt(cards.size());
                 card = cards.get(randomNumber);
-                cardByBoardId.put(gameId, card);
+                cardByGameId.put(gameId, card);
+                Date currentTime = new Date();
+                Date expirationTime = new Date(currentTime.getTime() + TimeUnit.MINUTES.toMillis(1));
+                gameStatus.setExpirationCardTime(expirationTime);
             }
-        } else {
-            throw new ActivityGameException("Invalid Card Value");
         }
-        logger.info(cardByBoardId.toString());
-        return cardByBoardId.get(gameId);
+        logger.info(cardByGameId.toString());
+        return cardByGameId.get(gameId);
     }
 
     public GameStatus<OneDimensionalCoordinate> applyMovement(int gameId) {
-        card = cardByBoardId.get(gameId);
+        card = cardByGameId.get(gameId);
         if (card != null && linearMovement.checkMovement(getCurrentPlayerPosition(), getCurrentPlayerPosition() + card.getCoordinate().getX())) {
             if (piece.linearPieceMove(card.getCoordinate().getX(), board, playerPositionByPlayerId)) {
                 gameStatus.setEndGame(true);
                 currentGameStatus();
                 endGame(gameId);
                 return gameStatus;
+            } else {
+                setAnswerToCorrectAnswerMap(gameId);
+                nextPlayer(gameId);
+                cardByGameId.remove(gameId);
+                return gameStatus;
             }
-            setAnswerToCorrectAnswerMap(gameId);
-            nextPlayer(gameId);
-            cardByBoardId.remove(gameId);
-            return gameStatus;
         } else {
-            throw new ActivityGameException("Card not found");
+            throw new ActivityGameException("Card not found or expired time");
         }
     }
 
     public GameStatus<OneDimensionalCoordinate> wrongAnswer(int gameId) {
-        setAnswerToWrongAnswerMap(gameId);
-        nextPlayer(gameId);
+        if (cardByGameId.get(gameId) != null) {
+            setAnswerToWrongAnswerMap(gameId);
+            nextPlayer(gameId);
+            cardByGameId.remove(gameId);
+            return gameStatus;
+        } else {
+            throw new ActivityGameException("Card not found ");
+        }
+    }
+
+    public GameStatus<OneDimensionalCoordinate> getGameStatus() {
         return gameStatus;
     }
 
@@ -101,7 +113,7 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
     private void nextPlayer(int gameID) {
         piece.nextPiece(board);
         currentGameStatus();
-        cardByBoardId.remove(gameID);
+        cardByGameId.remove(gameID);
     }
 
     private void setPlayersToPositionMap(List<Player> playerList) {
@@ -149,48 +161,4 @@ public class ActivityGame extends Game<OneDimensionalCoordinate> {
             wrongAnswer.put(gameId, updatedAnswer);
         }
     }
-
-//    public static void main(String[] args) {
-//        Random random = new Random();
-//        ActivityGame game = new ActivityGame();
-//        List<PlayerCreateDto> playerCreateDtoList = new ArrayList<>();
-//        PlayerCreateDto playerCreateDto = new PlayerCreateDto("First", "blue");
-//        PlayerCreateDto playerCreateDto2 = new PlayerCreateDto("Second", "red");
-//        PlayerCreateDto playerCreateDto3 = new PlayerCreateDto("Third", "black");
-//        PlayerCreateDto playerCreateDto4 = new PlayerCreateDto("Four", "green");
-//
-//        playerCreateDtoList.add(playerCreateDto);
-//        playerCreateDtoList.add(playerCreateDto2);
-//        playerCreateDtoList.add(playerCreateDto3);
-//        playerCreateDtoList.add(playerCreateDto4);
-//
-//        game.init(30, playerCreateDtoList,1);
-//
-//        int randomNumberForMovement;
-//        int randomNumberForPoints;
-//        int correct = 0;
-//        int wrong = 0;
-//
-//        do {
-//            randomNumberForPoints = random.nextInt(3) + 1;
-//            game.cardByPoint(randomNumberForPoints, 1);
-//            randomNumberForMovement = random.nextInt(100);
-//            if (wasCorrectAnswer(randomNumberForMovement)) {
-//                game.applyMovement(1);
-//                correct += 1;
-//            } else {
-//                game.wrongAnswer(1);
-//                wrong += 1;
-//            }
-//        } while (!game.gameStatus.isEndGame());
-//
-//        logger.info(game.getStatistic(1));
-//        logger.info("Correct Answer -> " + correct);
-//        logger.info("Wrong Answer   -> " + wrong);
-//
-//    }
-//
-//    private static boolean wasCorrectAnswer(int randomNumberForMovement) {
-//        return (randomNumberForMovement % 2) == 0;
-//    }
 }
